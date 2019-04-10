@@ -2,6 +2,7 @@ import gym
 import gym_mppt
 import tensorflow as tf
 import numpy as np
+from gym.utils import seeding
 
 
 env = gym.make('mppt-v0')
