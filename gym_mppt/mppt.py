@@ -1,9 +1,14 @@
 import gym
-import gym_mppt
 import tensorflow as tf
 import numpy as np
 from gym.utils import seeding
 
+from gym.envs.registration import register
+register(
+    id='mppt-v0',
+    entry_point='gym_mppt.envs:MpptEnv',
+    kwargs={"type_panel": 2}
+)
 
 env = gym.make('mppt-v0')
 
