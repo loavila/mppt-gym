@@ -2,7 +2,6 @@ import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
 import numpy as np
-#
 
 
 class MpptEnv(gym.Env):
@@ -43,7 +42,6 @@ class MpptEnv(gym.Env):
             self.niscT = .0010199
             self.nvocT = -.00361
 
-
         self.reward_range = (-float('inf'), float('inf'))
         # spec = None
 
@@ -55,37 +53,56 @@ class MpptEnv(gym.Env):
         self.observation_space = None
 
         self.seed()
+        self.state = None
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
     def step(self, action):
-        """
-        Parameters
-        ----------
-        action :
-
-        Returns
-        -------
-        ob, reward, episode_over, info : tuple
-            ob (object) :
-                an environment-specific object representing your observation of the environment.
-            reward (float) :
-                amount of reward achieved by the previous action.
-            episode_over (bool) :
-                whether it's time to reset the environment again.
-            info (dict) :
-                 diagnostic information useful for debugging. It can sometimes
-                 be useful for learning.
-        """
-        # self._take_action(action)
-        # self.status = self.env.step()
-        # reward = self._get_reward()
-        # ob = self.env.getState()
-        # episode_over = self.status != 0
-        # return ob, reward, episode_over, {}
         pass
+        state = self.state
+        V0,I0 = state
+
+        # PV model
+
+        T = 28 + 273
+        Tr1 = 40  # Reference temperature in degree fahrenheit
+        Tr = ((Tr1 - 32) * (5 / 9)) + 273  # Reference temperature in kelvin
+        S = 100  # Solar radiation in mW / sq.cm
+        ki = 0.00023  # in A / K
+        Iscr = 3.75  # SC Current at ref.temp. in A
+        Irr = 0.000021  # in A
+        k = 1.38065 * 10 ** (-23)  # Boltzmann constant
+        q = 1.6022 * 10 ** (-19)  # charge of an electron
+        A = 2.15
+        Eg0 = 1.166
+        alpha = 0.473
+        beta = 636
+        Eg = Eg0 - (alpha * T * T) / (T + beta) * q  # band gap energy of semiconductor used
+
+        # number of cells in joules
+        Np = 4
+        Ns = 60
+
+        V0 = (0, 300, 1)
+
+        Iph = (Iscr + ki * (T - Tr)) * ((S) / 100)
+        Irs = Irr * ((T / Tr) ^ 3) * np.exp(q * Eg / (k * A) * ((1 / Tr) - (1 / T)))
+        I0 = Np * Iph - Np * Irs * (np.exp(q / (k * T * A) * V0/Ns) - 1)
+        P0 = V0 * I0
+
+        dP = 0  # PV increment in dt
+
+        wp = 1
+        wn = 4
+
+        if dP < 0:
+            reward = wp * dP
+        elif dP >= 0:
+            reward = wn * dP
+
+        return self.state, reward,
 
     def reset(self):
         pass
@@ -96,11 +113,4 @@ class MpptEnv(gym.Env):
     def take_action(self, action):
         pass
 
-    def get_reward(self):
-        if self.status == 0:
-            return 1
-        elif self.status == 1:
-            return self.somestate ** 2
-        else:
-            return 0
-        ...
+
