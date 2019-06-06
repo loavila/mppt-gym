@@ -7,7 +7,7 @@ from gym.envs.registration import register
 register(
     id='mppt-v0',
     entry_point='gym_mppt.envs:MpptEnv',
-    kwargs={"type_panel": 2}
+    #kwargs={"type_panel": 1}
 )
 
 env = gym.make('mppt-v0')
