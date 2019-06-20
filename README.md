@@ -5,6 +5,8 @@
 ```
 
 **Using the environment**
+Run in a Python script:
+
 ``` bash
     import gym
     import gym_mppt

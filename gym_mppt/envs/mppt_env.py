@@ -2,7 +2,8 @@ import gym
 import numpy as np
 from gym import spaces
 from gym.utils import seeding
-from pvmodel import Panel
+#from pvmodel import Panel
+from gym_mppt.envs.pvmodel import Panel
 
 
 class MpptEnv(gym.Env):
@@ -33,7 +34,7 @@ class MpptEnv(gym.Env):
 
     def step(self, action):
         pass
-        state = self.state
+        state = self.state 
         # I,V,P = state
 
         tension = 10
@@ -41,7 +42,11 @@ class MpptEnv(gym.Env):
         pv = Panel()
         state = pv.calc_pv(tension)
 
-        reward = 0
+        r = self.seed()
+
+        reward = r
+
+        # return  next_state, reward, done, info
 
         return self.state, reward,
 
