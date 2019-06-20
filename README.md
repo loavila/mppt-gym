@@ -5,6 +5,7 @@
 ```
 
 **Using the environment**
+
 Run in a Python script:
 
 ``` bash
