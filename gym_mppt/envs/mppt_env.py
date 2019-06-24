@@ -48,7 +48,7 @@ class MpptEnv(gym.Env):
 
         # return  next_state, reward, done, info
 
-        return self.state, reward,
+        return self.state, reward, 0, 1
 
     def reset(self):
         pass
