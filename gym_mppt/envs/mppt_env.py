@@ -2,7 +2,6 @@ import gym
 import numpy as np
 from gym import spaces
 from gym.utils import seeding
-#from pvmodel import Panel
 from gym_mppt.envs.pvmodel import Panel
 
 
