@@ -3,6 +3,7 @@ import numpy as np
 from gym import spaces
 from gym.utils import seeding
 from gym_mppt.envs.pvmodel import Panel
+from gym_mppt.envs.dc_control import DCcontrol
 
 
 class MpptEnv(gym.Env):
@@ -37,9 +38,14 @@ class MpptEnv(gym.Env):
         # I,V,P = state
 
         tension = 10
-        # PV model
+
+        # PV and dc-dc models
         pv = Panel()
         state = pv.calc_pv(tension)
+        dc_controller = DCcontrol()
+        alpha = 0.5
+        V = dc_controller.dcdc("buck", state[1], alpha)
+        print (V)
 
         r = self.seed()
 
