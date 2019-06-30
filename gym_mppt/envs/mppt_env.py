@@ -33,27 +33,30 @@ class MpptEnv(gym.Env):
         return [seed]
 
     def step(self, action):
-        pass
-        state = self.state 
-        # I,V,P = state
 
-        tension = 10
+        pv_current = self.state[0]
+        pv_voltage = self.state[1]
+        pv_power = self.state[2]
+
+        Vg = 10
 
         # PV and dc-dc models
         pv = Panel()
-        state = pv.calc_pv(tension)
+        self.state = pv.calc_pv(Vg)
         dc_controller = DCcontrol()
-        alpha = 0.5
-        V = dc_controller.dcdc("buck", state[1], alpha)
-        print (V)
+        alpha = action
+        V = dc_controller.dcdc("buck", pv_voltage, alpha)
 
-        r = self.seed()
-
-        reward = r
+        # wp, wn = 1, 4
+        # dP = (pv_power(i+1)-pv_power(i)) / dt
+        # if dP < 0
+        #    reward = wp * dP
+        # elif dP >= 0
+        #    reward = wn * dP
 
         # return  next_state, reward, done, info
+        return self.state, reward, done, {}
 
-        return self.state, reward, 0, 1
 
     def reset(self):
         pass
