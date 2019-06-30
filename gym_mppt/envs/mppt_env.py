@@ -27,6 +27,7 @@ class MpptEnv(gym.Env):
 
         self.seed()
         self.state = np.zeros(3)
+        #self.dt = 0.1 #seconds (it will be used for the reward computing)
         
 
     def seed(self, seed=None):
@@ -35,11 +36,11 @@ class MpptEnv(gym.Env):
 
     def step(self, action):
 
-        pv_current = self.state[0]
-        pv_voltage = self.state[1]
-        pv_power = self.state[2]
+        pv_current = self.state[0] # Paara que se usa?
+        pv_voltage = self.state[1] #es el Vg? de ser asi...ver linea 43 y 50...no me cierra
+        pv_power = self.state[2] # Paara que se usa?
 
-        Vg = 10
+        Vg = 10 # este deberiamos pasarlo como parametro o en cuando se inicia en la clase en una variable self...veremos....
 
         # PV and dc-dc models
         pv = Panel()

@@ -32,7 +32,7 @@ class Panel(object):
         # panel output current
         I = self.Np * Iph - self.Np * Irs * (np.exp(self.q / (self.k * self.T * self.A) * vx / self.Ns) - 1)
         # panel output voltage
-        V = vx
+        V = vx # este es el Vg? 
         # panel power
         P = vx * I
 
