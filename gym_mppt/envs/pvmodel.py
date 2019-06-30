@@ -26,7 +26,7 @@ class Panel(object):
         # band gap energy of semiconductor
         Eg = self.Eg0 - (self.alpha * self.T * self.T) / (self.T + self.beta) * self.q
         # generated photocurrent
-        Iph = (self.Iscr + self.ki * (self.T - Tr)) * (self.S / 100)
+        Iph = (self.Iscr + self.ki * (self.T - Tr)) * (self.S / 1000)
         # cell reverse saturation current
         Irs = self.Irr * ((self.T / Tr) ** 3) * np.exp(self.q * Eg / (self.k * self.A) * ((1 / Tr) - (1 / self.T)))
         # panel output current

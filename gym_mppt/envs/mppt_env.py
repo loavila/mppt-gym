@@ -26,7 +26,8 @@ class MpptEnv(gym.Env):
         self.observation_space = None
 
         self.seed()
-        self.state = None
+        self.state = np.zeros(3)
+        
 
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -55,11 +56,14 @@ class MpptEnv(gym.Env):
         #    reward = wn * dP
 
         # return  next_state, reward, done, info
+        reward = 0
+        done = False
         return self.state, reward, done, {}
 
 
     def reset(self):
-        pass
+        self.state = np.zeros(3)
+        return self.state
 
     def render(self, mode='human', close=False):
         pass

@@ -1,6 +1,6 @@
 from gym_mppt.envs.pvmodel import Panel
 from gym_mppt.envs.dc_control import DCcontrol
-
+#rama1
 Vg = 10
 
 pv = Panel()
