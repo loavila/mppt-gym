@@ -34,13 +34,13 @@ class MpptEnv(gym.Env):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-    def step(self, action):
+    def step(self, action,Vg):
 
         pv_current = self.state[0] # Paara que se usa?
         pv_voltage = self.state[1] #es el Vg? de ser asi...ver linea 43 y 50...no me cierra
         pv_power = self.state[2] # Paara que se usa?
 
-        Vg = 10 # este deberiamos pasarlo como parametro o en cuando se inicia en la clase en una variable self...veremos....
+        #Vg = 10 # este deberiamos pasarlo como parametro o en cuando se inicia en la clase en una variable self...veremos....
 
         # PV and dc-dc models
         pv = Panel()
