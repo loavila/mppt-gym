@@ -4,9 +4,9 @@ import numpy as np
 class Panel(object):
 
     def __init__(self):
-        self.T = 28 + 273 # cell temperature
+        self.TK = 273 # Kelvin temperature
         self.Tr1 = 40  # Reference temperature in degree fahrenheit
-        self.S = 100  # Solar radiation in mW / sq.cm
+        # self.S = 100  # Solar radiation in mW / sq.cm
         self.ki = 0.00023  # in A / K
         self.Iscr = 3.75  # SC Current at ref.temp. in A
         self.Irr = 0.000021  # in A
@@ -20,19 +20,20 @@ class Panel(object):
         self.Np = 4
         self.Ns = 60
 
-    def calc_pv(self, vx):
+    def calc_pv(self, G, T, vx):
+        Tcell = T + self.TK # cell temperature
         # cell reference temperature in kelvin
         Tr = ((self.Tr1 - 32) * (5 / 9)) + 273
         # band gap energy of semiconductor
-        Eg = self.Eg0 - (self.alpha * self.T * self.T) / (self.T + self.beta) * self.q
+        Eg = self.Eg0 - (self.alpha * Tcell * Tcell) / (Tcell + self.beta) * self.q
         # generated photocurrent
-        Iph = (self.Iscr + self.ki * (self.T - Tr)) * (self.S / 100)
+        Iph = (self.Iscr + self.ki * (Tcell - Tr)) * (G / 1000)
         # cell reverse saturation current
-        Irs = self.Irr * ((self.T / Tr) ** 3) * np.exp(self.q * Eg / (self.k * self.A) * ((1 / Tr) - (1 / self.T)))
+        Irs = self.Irr * ((Tcell / Tr) ** 3) * np.exp(self.q * Eg / (self.k * self.A) * ((1 / Tr) - (1 / Tcell)))
         # panel output current
-        I = self.Np * Iph - self.Np * Irs * (np.exp(self.q / (self.k * self.T * self.A) * vx / self.Ns) - 1)
+        I = self.Np * Iph - self.Np * Irs * (np.exp(self.q / (self.k * Tcell * self.A) * vx / self.Ns) - 1)
         # panel output voltage
-        V = vx
+        V = vx # este es el Vg? 
         # panel power
         P = vx * I
 

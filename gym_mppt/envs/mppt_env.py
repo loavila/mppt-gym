@@ -26,40 +26,60 @@ class MpptEnv(gym.Env):
         self.observation_space = None
 
         self.seed()
-        self.state = None
-
+        self.state = np.zeros((2, 3))
+        #self.dt = 0.1 #seconds (it will be used for the reward computing)
+        
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
     def step(self, action):
 
-        pv_current = self.state[0]
-        pv_voltage = self.state[1]
-        pv_power = self.state[2]
+        # leer valor instantaneo de una serie de tiempo
+        G = 100 #read irradiance # Solar radiation in mW / sq.cm
+        T = 28 #read temperature # ojo con kelvin 273
 
-        Vg = 10
+        # aca supongo que solo vamos a tener disponibles los ultimos dos valores
+        sim_length = 2
+        pv_current = self.state[sim_length, 0]
+        pv_voltage = self.state[sim_length, 1]
+        pv_power = self.state[sim_length, 2]
+
+        V = pv_voltage + action # valor anterior de V mas la accion dV
 
         # PV and dc-dc models
         pv = Panel()
-        self.state = pv.calc_pv(Vg)
-        dc_controller = DCcontrol()
-        alpha = action
-        V = dc_controller.dcdc("buck", pv_voltage, alpha)
+        self.state = pv.calc_pv(G,T,V)
 
-        # wp, wn = 1, 4
-        # dP = (pv_power(i+1)-pv_power(i)) / dt
-        # if dP < 0
-        #    reward = wp * dP
-        # elif dP >= 0
-        #    reward = wn * dP
+        # dc_controller = DCcontrol()
+        # alpha = action
+        # V = dc_controller.dcdc("buck", pv_voltage, alpha)
 
-        # return  next_state, reward, done, info
+        # aca supongo que solo vamos a tener disponibles los ultimos dos valores
+        dP = self.state[1, 2] - self.state[0, 2] # pv_power(i) - pv_power(i-1)
+        dV = self.state[1, 1] - self.state[0, 1] # pv_voltage(i) - pv_voltage(i-1)
+
+        epsilon = 0.1
+        wp = 5.
+        wn = 2.
+
+        # ojo con el reward por que:
+        # dP/dV = 0 at MPP
+        # dP/dV > 0 left of MPP
+        # dP/dV < 0 right of MPP
+
+        if (dP/dV <= epsilon): #(dP/dV >= 0) and (dP/dV < epsilon):
+            reward = wp * dP
+        else:
+            reward = wn * dP
+
+        done = False
         return self.state, reward, done, {}
 
 
     def reset(self):
-        pass
+        self.state = np.zeros((2, 3))
+        return self.state
 
     def render(self, mode='human', close=False):
         pass
