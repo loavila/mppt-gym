@@ -59,9 +59,10 @@ class MpptEnv(gym.Env):
         dP = self.state[1, 2] - self.state[0, 2] # pv_power(i) - pv_power(i-1)
         dV = self.state[1, 1] - self.state[0, 1] # pv_voltage(i) - pv_voltage(i-1)
 
+        P = self.state[1, 2]
+
         epsilon = 0.1
-        wp = 5.
-        wn = 2.
+        
 
         # ojo con el reward por que:
         # dP/dV = 0 at MPP
@@ -71,11 +72,17 @@ class MpptEnv(gym.Env):
         # asi esta en el car-on-a-hill continuo
         # done = true termina el episodio
 
+        ''' Ojo luis, porque con el done asi, el dP/Dv puede ser negativo y da que termina el episodio. Solo comenté esto. Lo hago abajo para que quede mas facil...
         done = bool(dP/dV <= epsilon)
         if done: #(dP/dV >= 0) and (dP/dV < epsilon):
             reward = wp * dP
         else:
             reward = wn * dP
+
+        
+        '''
+        done = bool(0<=dP/dV <= epsilon)
+        reward = reward_function1(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
 
         return self.state, reward, done, {}
 
@@ -89,3 +96,33 @@ class MpptEnv(gym.Env):
 
     def take_action(self, action):
         pass
+
+    def reward_function1(self, dP, P, done):
+        wp = 5.
+        wn = 2.
+
+        if done: #(dP/dV >= 0) and (dP/dV < epsilon):
+            r = wp * dP
+        else:
+            r = wn * dP
+
+        return self.state, reward, done, {}
+
+    def reward_function2(self, dP, P, done):
+        wp = 54444.
+        wn = 245544.
+
+        if done: #(dP/dV >= 0) and (dP/dV < epsilon):
+            r = wp * dP
+        else:
+            r = wn * dP
+
+        return r
+
+    def reward_function3(self, dP, P, done):
+        #por ej usamos una gaussiana o lo q sea....
+
+        return pass #self.state, reward, done, {}
+      
+
+      
