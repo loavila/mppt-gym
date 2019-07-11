@@ -68,12 +68,15 @@ class MpptEnv(gym.Env):
         # dP/dV > 0 left of MPP
         # dP/dV < 0 right of MPP
 
-        if (dP/dV <= epsilon): #(dP/dV >= 0) and (dP/dV < epsilon):
+        # asi esta en el car-on-a-hill continuo
+        # done = true termina el episodio
+
+        done = bool(dP/dV <= epsilon)
+        if done: #(dP/dV >= 0) and (dP/dV < epsilon):
             reward = wp * dP
         else:
             reward = wn * dP
 
-        done = False
         return self.state, reward, done, {}
 
 

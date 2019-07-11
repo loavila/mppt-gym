@@ -21,7 +21,8 @@ class Panel(object):
         self.Ns = 60
 
     def calc_pv(self, G, T, vx):
-        Tcell = T + self.TK # cell temperature
+        # cell temperature
+        Tcell = T + self.TK
         # cell reference temperature in kelvin
         Tr = ((self.Tr1 - 32) * (5 / 9)) + 273
         # band gap energy of semiconductor
