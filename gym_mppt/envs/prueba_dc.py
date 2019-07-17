@@ -1,10 +1,28 @@
 from gym_mppt.envs.pvmodel import Panel
 from gym_mppt.envs.dc_control import DCcontrol
-
+G = 19
+T = 19
 Vg = 10
 
 pv = Panel()
-state = pv.calc_pv(Vg)
+I, V, P = pv.calc_pv(G,T,Vg)
+
+print('I =',I,'V =', V, 'P =', P)
+
+
+#Probamos el entorno gym 'mppt-v0'
+import gym
+ENV_NAME = 'mppt-v0'
+
+env = gym.make(ENV_NAME)
+
+V = 15
+
+estado, recompensa, d, b =env.step(15)
+
+print('estado',estado,'DimSt = ',estado.shape)
+exit()
+
 
 dc_controller = DCcontrol()
 alpha = 0.5
