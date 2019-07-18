@@ -28,7 +28,7 @@ class MpptEnv(gym.Env):
         self.seed()
         self.state = np.zeros((1, 3)) # state = [[V,P,I]]
         #self.dt = 0.1 #seconds (it will be used for the reward computing)
-        self.epsilon = 0.1 #It is the bandwith for the reward computing
+        self.epsilon = 0.9 #It is the bandwith for the reward computing
         
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -38,7 +38,7 @@ class MpptEnv(gym.Env):
 
         # leer valor instantaneo de una serie de tiempo
         G = 100 #read irradiance # Solar radiation in mW / sq.cm
-        T = 28 #read temperature # ojo con kelvin 273
+        T = 25 #read temperature (ºC) # ojo con kelvin 273
 
         # aca supongo que solo vamos a tener disponibles los ultimos dos valores
         '''
@@ -47,9 +47,10 @@ class MpptEnv(gym.Env):
         pv_voltage = self.state[sim_length, 1]
         pv_power = self.state[sim_length, 2]
         '''
-        pv_voltage = self.state[0,1]
+        pv_voltage = self.state[0,0]
 
-        V = pv_voltage + action # valor anterior de V mas la accion dV
+        v = pv_voltage + action # valor anterior de V mas la accion dV
+        V = max(v,0)
 
         # PV and dc-dc models
         pv = Panel()
@@ -67,11 +68,12 @@ class MpptEnv(gym.Env):
         dP = self.state[1, 2] - self.state[0, 2] # pv_power(i) - pv_power(i-1)
         dV = self.state[1, 1] - self.state[0, 1] # pv_voltage(i) - pv_voltage(i-1)
         '''
-
-        dP = P_new - self.state[0,1] # pv_power(i) - pv_power(i-1)
+        
         dV = V_new - self.state[0,0] # pv_voltage(i) - pv_voltage(i-1)
-
+        dP = P_new - self.state[0,1] # pv_power(i) - pv_power(i-1)
         P = P_new
+
+        #print('dv =', dV, 'dP = ', dP, 'P =', P)
 
                
 
@@ -93,9 +95,11 @@ class MpptEnv(gym.Env):
         
         '''
         epsilon = self.epsilon
-        done = bool(0<=dP/dV <= epsilon)
+        #done = bool(0<= dP/dV <= epsilon)
+        done = bool(np.abs(dP/dV) <= epsilon and P>0)
+        #print('dP/dV = ', dP/dV, 'P =', P)
         reward = self.reward_function1(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
-
+        
         #The next state is:
         self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
 
@@ -115,10 +119,12 @@ class MpptEnv(gym.Env):
         pass
 
     def reward_function1(self, dP, P, done):
-        wp = 5.
-        wn = 2.
+        wp = 2.
+        wn = 4.
 
         if done: #(dP/dV >= 0) and (dP/dV < epsilon):
+            r = wp * P**2
+        elif dP > 0:
             r = wp * dP
         else:
             r = wn * dP
@@ -126,8 +132,8 @@ class MpptEnv(gym.Env):
         return r
 
     def reward_function2(self, dP, P, done):
-        wp = 54444.
-        wn = 245544.
+        wp = 5.
+        wn = 2.
 
         if done: #(dP/dV >= 0) and (dP/dV < epsilon):
             r = wp * dP

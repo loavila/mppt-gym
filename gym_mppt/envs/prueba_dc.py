@@ -16,11 +16,11 @@ ENV_NAME = 'mppt-v0'
 
 env = gym.make(ENV_NAME)
 
-V = 15
+V = 26
 
-estado, recompensa, d, b =env.step(15)
+estado, recompensa, done, b =env.step(V)
 
-print('estado',estado,'DimSt = ',estado.shape)
+print('estado',estado,'DimSt = ',estado.shape, 'reward', recompensa, 'reward.shape:', recompensa.shape)
 exit()
 
 
