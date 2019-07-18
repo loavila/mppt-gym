@@ -37,8 +37,8 @@ class MpptEnv(gym.Env):
     def step(self, action):
 
         # leer valor instantaneo de una serie de tiempo
-        G = 100 #read irradiance # Solar radiation in mW / sq.cm
-        T = 25 #read temperature (ºC) # ojo con kelvin 273
+        G = 100. #read irradiance # Solar radiation in mW / sq.cm
+        T = 25. #read temperature (ºC) # ojo con kelvin 273
 
         # aca supongo que solo vamos a tener disponibles los ultimos dos valores
         '''
@@ -49,8 +49,9 @@ class MpptEnv(gym.Env):
         '''
         pv_voltage = self.state[0,0]
 
-        v = pv_voltage + action # valor anterior de V mas la accion dV
-        V = max(v,0)
+        v0 = pv_voltage + action # valor anterior de V mas la accion dV
+        v1 = max(v0,0.)
+        V = min(v1,30.)
 
         # PV and dc-dc models
         pv = Panel()

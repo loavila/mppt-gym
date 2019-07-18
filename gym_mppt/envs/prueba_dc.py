@@ -16,7 +16,7 @@ ENV_NAME = 'mppt-v0'
 
 env = gym.make(ENV_NAME)
 
-V = 26
+V = 95
 
 estado, recompensa, done, b =env.step(V)
 
