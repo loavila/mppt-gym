@@ -51,7 +51,7 @@ class MpptEnv(gym.Env):
 
         v0 = pv_voltage + action # valor anterior de V mas la accion dV
         v1 = max(v0,0.)
-        V = min(v1,30.)
+        V = min(v1,40.)
 
         # PV and dc-dc models
         pv = Panel()
@@ -127,6 +127,8 @@ class MpptEnv(gym.Env):
             r = wp * P**2
         elif dP > 0:
             r = wp * dP
+        elif P <= 0:
+            r = -100000
         else:
             r = wn * dP
 
