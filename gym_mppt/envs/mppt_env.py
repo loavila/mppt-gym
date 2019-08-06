@@ -34,11 +34,11 @@ class MpptEnv(gym.Env):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-    def step(self, action):
+    def step(self, action,Temperatura, Irradiancia):
 
         # leer valor instantaneo de una serie de tiempo
-        G = 100. #read irradiance # Solar radiation in mW / sq.cm
-        T = 25. #read temperature (ºC) # ojo con kelvin 273
+        G = Irradiancia #read irradiance # Solar radiation in mW / sq.cm
+        T = Temperatura #read temperature (ºC) # ojo con kelvin 273
 
         # aca supongo que solo vamos a tener disponibles los ultimos dos valores
         '''
@@ -102,9 +102,12 @@ class MpptEnv(gym.Env):
         reward = self.reward_function1(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
         
         #The next state is:
-        self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
+        #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
+        self.state = np.array([[V_new,P_new,dV]])
 
-        return self.state, reward, done, {}
+        info = np.array([I_new,T,G])
+
+        return self.state, reward, done, info
 
 
     def reset(self):
