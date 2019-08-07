@@ -33,7 +33,7 @@ class MpptEnv(gym.Env):
                                        shape=(self.state_dim,), dtype=np.float32)
 
         self.seed()
-        self.state = np.zeros((1, 3)) # state = [[V,P,I]]
+        self.state = np.zeros((3)) # state = [[V,P,I]]
         #self.dt = 0.1 #seconds (it will be used for the reward computing)
         self.epsilon = 0.5 #It is the bandwith for the reward computing
 
@@ -57,7 +57,7 @@ class MpptEnv(gym.Env):
         pv_voltage = self.state[sim_length, 1]
         pv_power = self.state[sim_length, 2]
         '''
-        pv_voltage = self.state[0,0]
+        pv_voltage = self.state[0]
 
         v0 = pv_voltage + action # valor anterior de V mas la accion dV
         v1 = max(v0,0.)
@@ -80,8 +80,8 @@ class MpptEnv(gym.Env):
         dV = self.state[1, 1] - self.state[0, 1] # pv_voltage(i) - pv_voltage(i-1)
         '''
         
-        dV = V_new - self.state[0,0] # pv_voltage(i) - pv_voltage(i-1)
-        dP = P_new - self.state[0,1] # pv_power(i) - pv_power(i-1)
+        dV = V_new - self.state[0] # pv_voltage(i) - pv_voltage(i-1)
+        dP = P_new - self.state[1] # pv_power(i) - pv_power(i-1)
         P = P_new
 
         #print('dv =', dV, 'dP = ', dP, 'P =', P)
@@ -114,7 +114,7 @@ class MpptEnv(gym.Env):
         
         #The next state is:
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
-        self.state = np.array([[V_new,P_new,dV]])
+        self.state = np.array([V_new,P_new,dV])
 
         info = np.array([I_new,T,G,action])
 
@@ -122,9 +122,9 @@ class MpptEnv(gym.Env):
 
 
     def reset(self):
-        rows = np.size(self.state,0)
-        columns = np.size(self.state,1)
-        self.state = np.zeros((rows, columns))
+        state_dim = np.size(self.state)
+        
+        self.state = np.zeros((state_dim))
         
         irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
         temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
