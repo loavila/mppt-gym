@@ -60,7 +60,7 @@ class MpptEnv(gym.Env):
         '''
         pv_voltage = self.state[0]
 
-        v0 = pv_voltage + action # valor anterior de V mas la accion dV
+        v0 = pv_voltage + action[0][0] # valor anterior de V mas la accion dV
         v1 = max(v0,0.)
         V = min(v1,40.)
 
@@ -68,6 +68,8 @@ class MpptEnv(gym.Env):
         pv = Panel()
         #self.state = pv.calc_pv(G,T,V)
         I_new, V_new, P_new = pv.calc_pv(G,T,V)  #new_state = [I,V,P]
+        print('De pv-calc_pv tengo:','I_new =', I_new, 'V_new = ', V_new, 'P_new =', P_new)
+
 
     
 
@@ -116,6 +118,8 @@ class MpptEnv(gym.Env):
         #The next state is:
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
         self.state = np.array([V_new,P_new,dV])
+        #print('EL ESTADO ES', self.state, self.state.shape)
+        #print('V_new', type(V_new),V_new.shape,'P_new',type(P_new),P_new,'dV',type(dV),dV)
 
         #info = np.array([I_new,T,G,action])
 
@@ -125,7 +129,7 @@ class MpptEnv(gym.Env):
     def reset(self):
         state_dim = np.size(self.state)
         
-        self.state = np.zeros(state_dim)
+        self.state = np.zeros(3)
         
         irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
         temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
