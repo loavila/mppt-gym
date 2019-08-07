@@ -18,17 +18,18 @@ class MpptEnv(gym.Env):
         self.reward_range = (-float('inf'), float('inf'))
         # spec = None
 
-        self.min_action = -5.0
-        self.max_action = 5.0
+        self.min_action = -1.0
+        self.max_action = 1.0
 
         self.action_space = spaces.Box(low=self.min_action, high=self.max_action,
                                        shape=(1,), dtype=np.float32)
-        self.observation_space = None
+        self.observation_space = spaces.Box(low=-100, high=100,
+                                       shape=(3,), dtype=np.float32)
 
         self.seed()
         self.state = np.zeros((1, 3)) # state = [[V,P,I]]
         #self.dt = 0.1 #seconds (it will be used for the reward computing)
-        self.epsilon = 0.9 #It is the bandwith for the reward computing
+        self.epsilon = 0.5 #It is the bandwith for the reward computing
         
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -97,7 +98,8 @@ class MpptEnv(gym.Env):
         '''
         epsilon = self.epsilon
         #done = bool(0<= dP/dV <= epsilon)
-        done = bool(np.abs(dP/dV) <= epsilon and P>0)
+        #done = bool(np.abs(dP/dV) <= epsilon and P>0)
+        done = bool(np.abs(dP) <= epsilon and P>0)
         #print('dP/dV = ', dP/dV, 'P =', P)
         reward = self.reward_function1(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
         
@@ -105,7 +107,7 @@ class MpptEnv(gym.Env):
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
         self.state = np.array([[V_new,P_new,dV]])
 
-        info = np.array([I_new,T,G])
+        info = np.array([I_new,T,G,action])
 
         return self.state, reward, done, info
 
