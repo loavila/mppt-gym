@@ -4,7 +4,7 @@ from gym import spaces
 from gym.utils import seeding
 from gym_mppt.envs.pvmodel import Panel
 from gym_mppt.envs.dc_control import DCcontrol
-
+import random
 
 class MpptEnv(gym.Env):
     metadata = {
@@ -18,28 +18,37 @@ class MpptEnv(gym.Env):
         self.reward_range = (-float('inf'), float('inf'))
         # spec = None
 
-        self.min_action = -1.0
-        self.max_action = 1.0
+        self.min_action = -20.0
+        self.max_action = 20.0
+
+        self.max_stateValue = 1000.
+        self.min_stateValue = -1000.
+
+        self.state_dim = 3
+        self.action_dim = 1
 
         self.action_space = spaces.Box(low=self.min_action, high=self.max_action,
-                                       shape=(1,), dtype=np.float32)
-        self.observation_space = spaces.Box(low=-100, high=100,
-                                       shape=(3,), dtype=np.float32)
+                                       shape=(self.action_dim,), dtype=np.float32)
+        self.observation_space = spaces.Box(low=self.min_stateValue, high=self.max_stateValue,
+                                       shape=(self.state_dim,), dtype=np.float32)
 
         self.seed()
         self.state = np.zeros((1, 3)) # state = [[V,P,I]]
         #self.dt = 0.1 #seconds (it will be used for the reward computing)
         self.epsilon = 0.5 #It is the bandwith for the reward computing
+
+        self.Temp = 25
+        self.Irr = 100
         
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-    def step(self, action,Temperatura, Irradiancia):
+    def step(self, action):
 
         # leer valor instantaneo de una serie de tiempo
-        G = Irradiancia #read irradiance # Solar radiation in mW / sq.cm
-        T = Temperatura #read temperature (ºC) # ojo con kelvin 273
+        G = self.Irr #read irradiance # Solar radiation in mW / sq.cm
+        T = self.Temp #read temperature (ºC) # ojo con kelvin 273
 
         # aca supongo que solo vamos a tener disponibles los ultimos dos valores
         '''
@@ -116,6 +125,11 @@ class MpptEnv(gym.Env):
         rows = np.size(self.state,0)
         columns = np.size(self.state,1)
         self.state = np.zeros((rows, columns))
+        
+        irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
+        temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
+        self.Temp = random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
+        self.Irr = random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
         return self.state
 
     def render(self, mode='human', close=False):
