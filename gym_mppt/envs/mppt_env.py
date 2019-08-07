@@ -18,8 +18,8 @@ class MpptEnv(gym.Env):
         self.reward_range = (-float('inf'), float('inf'))
         # spec = None
 
-        self.min_action = -20.0
-        self.max_action = 20.0
+        self.min_actionValue = -20.0
+        self.max_actionValue = 20.0
 
         self.max_stateValue = 1000.
         self.min_stateValue = -1000.
@@ -27,13 +27,14 @@ class MpptEnv(gym.Env):
         self.state_dim = 3
         self.action_dim = 1
 
-        self.action_space = spaces.Box(low=self.min_action, high=self.max_action,
+        self.action_space = spaces.Box(low=self.min_actionValue, high=self.max_actionValue,
                                        shape=(self.action_dim,), dtype=np.float32)
+        
         self.observation_space = spaces.Box(low=self.min_stateValue, high=self.max_stateValue,
                                        shape=(self.state_dim,), dtype=np.float32)
 
         self.seed()
-        self.state = np.zeros((3)) # state = [[V,P,I]]
+        self.state = np.zeros(3) # state = [[V,P,I]]
         #self.dt = 0.1 #seconds (it will be used for the reward computing)
         self.epsilon = 0.5 #It is the bandwith for the reward computing
 
@@ -116,9 +117,9 @@ class MpptEnv(gym.Env):
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
         self.state = np.array([V_new,P_new,dV])
 
-        info = np.array([I_new,T,G,action])
+        #info = np.array([I_new,T,G,action])
 
-        return self.state, reward, done, info
+        return self.state, reward, done, {}
 
 
     def reset(self):
