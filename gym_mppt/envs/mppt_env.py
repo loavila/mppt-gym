@@ -68,7 +68,7 @@ class MpptEnv(gym.Env):
         pv = Panel()
         #self.state = pv.calc_pv(G,T,V)
         I_new, V_new, P_new = pv.calc_pv(G,T,V)  #new_state = [I,V,P]
-        print('De pv-calc_pv tengo:','I_new =', I_new, 'V_new = ', V_new, 'P_new =', P_new)
+        #print('De pv-calc_pv tengo:','I_new =', I_new, 'V_new = ', V_new, 'P_new =', P_new)
 
 
     
@@ -129,7 +129,7 @@ class MpptEnv(gym.Env):
     def reset(self):
         state_dim = np.size(self.state)
         
-        self.state = np.zeros(3)
+        self.state = np.zeros(state_dim)
         
         irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
         temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
