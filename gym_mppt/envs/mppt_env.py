@@ -38,8 +38,10 @@ class MpptEnv(gym.Env):
         #self.dt = 0.1 #seconds (it will be used for the reward computing)
         self.epsilon = 1. #It is the bandwith for the reward computing
 
-        self.Temp = 10
-        self.Irr = 90
+        self.Temp = 25
+        self.Irr = 100
+        
+
         
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -135,6 +137,17 @@ class MpptEnv(gym.Env):
         temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
         self.Temp = random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
         self.Irr = random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
+        return self.state
+
+    def setTempIrr(self,last_state,T,G):
+        """
+        Esta funcion es para usar unicamente en la simulación, para cuando le cambiamos la Temp y la Irr
+        """
+        self.state = last_state
+        
+        self.Temp = T
+        self.Irr = G
+        
         return self.state
 
     def render(self, mode='human', close=False):
