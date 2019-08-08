@@ -36,10 +36,10 @@ class MpptEnv(gym.Env):
         self.seed()
         self.state = np.zeros(3) # state = [[V,P,I]]
         #self.dt = 0.1 #seconds (it will be used for the reward computing)
-        self.epsilon = 0.5 #It is the bandwith for the reward computing
+        self.epsilon = 1. #It is the bandwith for the reward computing
 
-        self.Temp = 25
-        self.Irr = 100
+        self.Temp = 10
+        self.Irr = 90
         
     def seed(self, seed=None):
         self.np_random, seed = seeding.np_random(seed)
@@ -113,7 +113,7 @@ class MpptEnv(gym.Env):
         #done = bool(np.abs(dP/dV) <= epsilon and P>0)
         done = bool(np.abs(dP) <= epsilon and P>0)
         #print('dP/dV = ', dP/dV, 'P =', P)
-        reward = self.reward_function1(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
+        reward = self.reward_function2(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
         
         #The next state is:
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
@@ -121,9 +121,9 @@ class MpptEnv(gym.Env):
         #print('EL ESTADO ES', self.state, self.state.shape)
         #print('V_new', type(V_new),V_new.shape,'P_new',type(P_new),P_new,'dV',type(dV),dV)
 
-        #info = np.array([I_new,T,G,action])
+        info = np.array([I_new,T,G,action])
 
-        return self.state, reward, done, {}
+        return self.state, reward, done, info
 
 
     def reset(self):
@@ -145,27 +145,31 @@ class MpptEnv(gym.Env):
 
     def reward_function1(self, dP, P, done):
         wp = 2.
-        wn = 4.
+        wn = 1.
 
         if done: #(dP/dV >= 0) and (dP/dV < epsilon):
             r = wp * P**2
         elif dP > 0:
             r = wp * dP
         elif P <= 0:
-            r = -100000
-        else:
+            r = -20000
+        elif dP<0:
             r = wn * dP
 
         return r
 
     def reward_function2(self, dP, P, done):
-        wp = 5.
-        wn = 2.
+        wp = 20.
+        wn = 4.
 
         if done: #(dP/dV >= 0) and (dP/dV < epsilon):
+            r = wp * P**2
+        elif dP > 0 and P>0:
             r = wp * dP
-        else:
+        elif dP<0 and P>0:
             r = wn * dP
+        elif P <= 0:
+            r = -20000
 
         return r
 
