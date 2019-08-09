@@ -6,7 +6,7 @@ from gym_mppt.envs.pvmodel import Panel
 from gym_mppt.envs.dc_control import DCcontrol
 import random
 
-class MpptEnv(gym.Env):
+class MpptEnv1(gym.Env):
     metadata = {
         'render.modes': ['human']
         # normal = AI plays, renders at 35 fps (i.e. would be used to watch AI play)
@@ -62,8 +62,7 @@ class MpptEnv(gym.Env):
         '''
         pv_voltage = self.state[0]
 
-        #v0 = pv_voltage + action[0][0] # valor anterior de V mas la accion dV
-        v0 = pv_voltage + action # pa el Colab!
+        v0 = pv_voltage + action[0][0] # valor anterior de V mas la accion dV
         v1 = max(v0,0.)
         V = min(v1,40.)
 
@@ -129,6 +128,7 @@ class MpptEnv(gym.Env):
         return self.state, reward, done, info
 
 
+
     def reset(self):
         state_dim = np.size(self.state)
         
@@ -140,7 +140,17 @@ class MpptEnv(gym.Env):
         self.Irr = random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
         return self.state
 
- 
+    def setTempIrr(self,last_state,T,G):
+        """
+        Esta funcion es para usar unicamente en la simulación, para cuando le cambiamos la Temp y la Irr
+        """
+        self.state = last_state
+        
+        self.Temp = T
+        self.Irr = G
+        
+        return self.state
+
     def render(self, mode='human', close=False):
         pass
 
