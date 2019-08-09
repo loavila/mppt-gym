@@ -121,7 +121,7 @@ class MpptEnv(gym.Env):
         #The next state is:
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
         self.state = np.reshape(np.hstack([V_new,P_new,dV]), (self.state_dim,)) 
-        print('self.state=',self.state,self.state.shape)
+        print('self.state=',self.state,self.state.shape, 'done', done)
         #print('EL ESTADO ES', self.state, self.state.shape)
         #print('V_new', type(V_new),V_new.shape,'P_new',type(P_new),P_new,'dV',type(dV),dV)
 
