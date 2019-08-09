@@ -90,7 +90,7 @@ class MpptEnv(gym.Env):
         dP = P_new - self.state[1] # pv_power(i) - pv_power(i-1)
         P = P_new
 
-        #print('dv =', dV, 'dP = ', dP, 'P =', P)
+        print('dv =', dV, 'dP = ', dP, 'P =', P)
 
                
 
