@@ -134,6 +134,8 @@ class MpptEnv(gym.Env):
         state_dim = np.size(self.state)
         
         self.state = np.zeros(state_dim)
+
+        print('state reseteado =',self.state)
         
         irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
         temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
