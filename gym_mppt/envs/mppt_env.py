@@ -127,7 +127,7 @@ class MpptEnv(gym.Env):
 
         info = np.array([I_new,T,G,action])
 
-        return self.state, reward, done, info
+        return self.state, reward, done, {}
 
 
     def reset(self):
