@@ -125,9 +125,11 @@ class MpptEnv(gym.Env):
         #print('EL ESTADO ES', self.state, self.state.shape)
         #print('V_new', type(V_new),V_new.shape,'P_new',type(P_new),P_new,'dV',type(dV),dV)
 
-        info = np.array([I_new,T,G,action])
+        #info = np.array([I_new,T,G,action])
 
-        return self.state, reward, done, {}
+        info = {'I_new': I_new, 'T':T, 'G':G,'action':action}
+
+        return self.state, reward, done, info
 
 
     def reset(self):
