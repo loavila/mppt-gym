@@ -127,7 +127,7 @@ class MpptEnv1(gym.Env):
 
         #info = np.array([I_new,T,G,action])
 
-        info = {'I_new': I_new, 'T':T, 'G':G,'action':action}
+        info = {'Corriente': I_new, 'Temperatura':T, 'Irradiancia':G,'Accion':action}
 
         return self.state, reward, done, info
 
