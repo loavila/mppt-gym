@@ -62,7 +62,8 @@ class MpptEnv1(gym.Env):
         '''
         pv_voltage = self.state[0]
 
-        v0 = pv_voltage + action[0][0] # valor anterior de V mas la accion dV
+        #v0 = pv_voltage + action[0][0] # valor anterior de V mas la accion dV
+        v0 = pv_voltage + action # pa el Colab!
         v1 = max(v0,0.)
         V = min(v1,40.)
 
@@ -119,11 +120,13 @@ class MpptEnv1(gym.Env):
         
         #The next state is:
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
-        self.state = np.array([V_new,P_new,dV])
+        self.state = np.reshape(np.hstack([V_new,P_new,dV]), (self.state_dim,)) 
+        #print('self.state=',self.state,self.state.shape, 'done', done)
         #print('EL ESTADO ES', self.state, self.state.shape)
         #print('V_new', type(V_new),V_new.shape,'P_new',type(P_new),P_new,'dV',type(dV),dV)
 
         #info = np.array([I_new,T,G,action])
+
         info = {'I_new': I_new, 'T':T, 'G':G,'action':action}
 
         return self.state, reward, done, info
