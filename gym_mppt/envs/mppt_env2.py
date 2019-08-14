@@ -56,9 +56,9 @@ class MpptEnv2(gym.Env):
             self.Temp = T
             self.Irr = G
 
-            reward = False
-            done = False
-            info = info = {'Temperatura':T, 'Irradiancia':G}
+            #reward = False
+            #done = False
+            #info = info = {'Temperatura':T, 'Irradiancia':G}
         else:
 
 
