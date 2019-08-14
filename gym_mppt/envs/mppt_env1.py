@@ -13,7 +13,7 @@ class MpptEnv1(gym.Env):
         # human = Human plays the level to get better acquainted with level, commands, and variables
     }
 
-    def __init__(self, T=25,G=100):
+    def __init__(self):
 
         self.reward_range = (-float('inf'), float('inf'))
         # spec = None
@@ -38,8 +38,8 @@ class MpptEnv1(gym.Env):
         #self.dt = 0.1 #seconds (it will be used for the reward computing)
         self.epsilon = 1. #It is the bandwith for the reward computing
 
-        self.Temp = T #25
-        self.Irr = G#100
+        self.Temp = 25
+        self.Irr = 100
         
 
         
@@ -133,15 +133,15 @@ class MpptEnv1(gym.Env):
 
 
 
-    def reset(self):
+    def reset(self,T,G):
         state_dim = np.size(self.state)
         
         self.state = np.zeros(state_dim)
         
         #irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
         #temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
-        self.Temp = 25#random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
-        self.Irr = 100#random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
+        self.Temp = T # 25#random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
+        self.Irr = G #100#random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
         return self.state
 
     def setTempIrr(self,last_state,T,G):
