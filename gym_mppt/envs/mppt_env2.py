@@ -49,6 +49,7 @@ class MpptEnv2(gym.Env):
 
     def step(self, action):
 
+        '''
         if isinstance(action,str):
             T = float(action[0:5]) #Accion debe venir como un str de 10 carateres. Los primeros 5 para la temperatura, con 2 decimales (separados por un .) y los restantes para la irradiancia. Por ejemplo accion = 25.51101.02, tenemos T = 25.51 y G = 101.02 
             G = float(action[5:])
@@ -56,10 +57,26 @@ class MpptEnv2(gym.Env):
             self.Temp = T
             self.Irr = G
 
-            action = np.array([[T, G]]) 
+
             #reward = False
             #done = False
             #info = info = {'Temperatura':T, 'Irradiancia':G}
+        '''
+        if np.size(action,1)==2: 
+            #esto es muy particular del problema!
+
+            T = action[0][0]
+            G = action[0][1]
+            self.Temp = T
+            self.Irr = G
+
+
+            reward = False
+            done = False
+            info = info = {'Temperatura':T, 'Irradiancia':G}
+
+
+
         else:
 
 
