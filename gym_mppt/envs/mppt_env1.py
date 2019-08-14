@@ -13,7 +13,7 @@ class MpptEnv1(gym.Env):
         # human = Human plays the level to get better acquainted with level, commands, and variables
     }
 
-    def __init__(self):
+    def __init__(self, T=25,G=100):
 
         self.reward_range = (-float('inf'), float('inf'))
         # spec = None
@@ -38,8 +38,8 @@ class MpptEnv1(gym.Env):
         #self.dt = 0.1 #seconds (it will be used for the reward computing)
         self.epsilon = 1. #It is the bandwith for the reward computing
 
-        self.Temp = 25
-        self.Irr = 100
+        self.Temp = T #25
+        self.Irr = G#100
         
 
         
