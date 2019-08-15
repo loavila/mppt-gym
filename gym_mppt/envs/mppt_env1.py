@@ -144,6 +144,7 @@ class MpptEnv1(gym.Env):
         self.Irr = 100#random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
         return self.state
 
+    '''
     def setTempIrr(self,last_state,T,G):
         """
         Esta funcion es para usar unicamente en la simulación, para cuando le cambiamos la Temp y la Irr
@@ -154,6 +155,7 @@ class MpptEnv1(gym.Env):
         self.Irr = G
         
         return self.state
+    '''
 
     def render(self, mode='human', close=False):
         pass
