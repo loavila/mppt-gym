@@ -180,7 +180,7 @@ class MpptEnv1(gym.Env):
 
     def reward_function2(self, dP, P, done):
         wp = 20.
-        wn = 4.
+        wn = -4.
 
         if done: #(dP/dV >= 0) and (dP/dV < epsilon):
             r = wp * P**2

@@ -18,8 +18,8 @@ class MpptEnv(gym.Env):
         self.reward_range = (-float('inf'), float('inf'))
         # spec = None
 
-        self.min_actionValue = -20.0
-        self.max_actionValue = 20.0
+        self.min_actionValue = -5.0
+        self.max_actionValue = 5.0
 
         self.max_stateValue = 1000.
         self.min_stateValue = -1000.
@@ -169,7 +169,7 @@ class MpptEnv(gym.Env):
 
     def reward_function2(self, dP, P, done):
         wp = 20.
-        wn = 4.
+        wn = -4.
 
         if done: #(dP/dV >= 0) and (dP/dV < epsilon):
             r = wp * P**2
