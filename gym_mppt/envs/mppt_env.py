@@ -114,9 +114,10 @@ class MpptEnv(gym.Env):
         epsilon = self.epsilon
         #done = bool(0<= dP/dV <= epsilon)
         #done = bool(np.abs(dP/dV) <= epsilon and P>0)
-        done = bool(np.abs(dP) <= epsilon and P>0)
+        #done = bool(np.abs(dP) <= epsilon and P>0)
+        done = bool(P >= 150)
         #print('dP/dV = ', dP/dV, 'P =', P)
-        reward = self.reward_function2(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
+        reward = self.reward_function1(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
         
         #The next state is:
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
@@ -153,17 +154,16 @@ class MpptEnv(gym.Env):
         pass
 
     def reward_function1(self, dP, P, done):
-        wp = 2.
-        wn = 1.
+        wp = 0.01
+        wn = 0.001
 
-        if done: #(dP/dV >= 0) and (dP/dV < epsilon):
+        if done: 
             r = wp * P**2
-        elif dP > 0:
-            r = wp * dP
+        elif P > 0:
+            r = wn * P**2
         elif P <= 0:
             r = -20000
-        elif dP<0:
-            r = wn * dP
+        
 
         return r
 
