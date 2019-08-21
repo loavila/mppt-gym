@@ -167,11 +167,11 @@ class MpptEnv1(gym.Env):
         wp = 0.1
         wn = 0.1
 
-        if done: 
+        if done or dP<0: 
             r = - 1000
-        else:
-            r = (wn*P)**2
-
+        elif dP>0:
+            r = (wp*P)**2
+ 
         return r
 
     def reward_function2(self, dP, P, done):
