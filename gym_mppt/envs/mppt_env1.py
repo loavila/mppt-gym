@@ -18,11 +18,11 @@ class MpptEnv1(gym.Env):
         self.reward_range = (-float('inf'), float('inf'))
         # spec = None
 
-        self.min_actionValue = -20.0
-        self.max_actionValue = 20.0
+        self.min_actionValue = -5.0
+        self.max_actionValue = 5.0
 
         self.max_stateValue = 1000.
-        self.min_stateValue = -1000.
+        self.min_stateValue = -5000.
 
         self.state_dim = 3
         self.action_dim = 1

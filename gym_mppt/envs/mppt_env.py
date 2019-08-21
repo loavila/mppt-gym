@@ -22,7 +22,7 @@ class MpptEnv(gym.Env):
         self.max_actionValue = 5.0
 
         self.max_stateValue = 1000.
-        self.min_stateValue = -1000.
+        self.min_stateValue = -5000.
 
         self.state_dim = 3
         self.action_dim = 1
@@ -162,7 +162,7 @@ class MpptEnv(gym.Env):
         elif P > 0:
             r = wn * P**2
         elif P <= 0:
-            r = -20000
+            r = -P**2
         
 
         return r
