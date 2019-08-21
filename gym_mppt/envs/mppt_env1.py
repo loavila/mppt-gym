@@ -38,8 +38,8 @@ class MpptEnv1(gym.Env):
         #self.dt = 0.1 #seconds (it will be used for the reward computing)
         self.epsilon = 1. #It is the bandwith for the reward computing
 
-        self.Temp = 25
-        self.Irr = 100
+        self.Temp = 25.
+        self.Irr = 1000.
         
 
         
@@ -65,7 +65,7 @@ class MpptEnv1(gym.Env):
         #v0 = pv_voltage + action[0][0] # valor anterior de V mas la accion dV
         v0 = pv_voltage + action # pa el Colab!
         v1 = max(v0,0.)
-        V = min(v1,40.)
+        V = min(v1,34.5)
 
         # PV and dc-dc models
         pv = Panel()
@@ -140,8 +140,8 @@ class MpptEnv1(gym.Env):
         
         #irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
         #temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
-        self.Temp = 25#random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
-        self.Irr = 100#random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
+        #self.Temp = 25#random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
+        #self.Irr = 100#random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
         return self.state
 
     '''
@@ -164,17 +164,13 @@ class MpptEnv1(gym.Env):
         pass
 
     def reward_function1(self, dP, P, done):
-        wp = 2.
-        wn = 1.
+        wp = 0.1
+        wn = 0.1
 
-        if done: #(dP/dV >= 0) and (dP/dV < epsilon):
-            r = wp * P**2
-        elif dP > 0:
-            r = wp * dP
-        elif P <= 0:
-            r = -20000
-        elif dP<0:
-            r = wn * dP
+        if done: 
+            r = - 1000
+        else:
+            r = (wn*P)**2
 
         return r
 

@@ -39,7 +39,7 @@ class MpptEnv(gym.Env):
         self.epsilon = 1. #It is the bandwith for the reward computing
 
         self.Temp = 25
-        self.Irr = 100
+        self.Irr = 1000
         
 
         
@@ -65,7 +65,7 @@ class MpptEnv(gym.Env):
         #v0 = pv_voltage + action[0][0] # valor anterior de V mas la accion dV
         v0 = pv_voltage + action # pa el Colab!
         v1 = max(v0,0.)
-        V = min(v1,40.)
+        V = min(v1,34.5)
 
         # PV and dc-dc models
         pv = Panel()
@@ -115,7 +115,7 @@ class MpptEnv(gym.Env):
         #done = bool(0<= dP/dV <= epsilon)
         #done = bool(np.abs(dP/dV) <= epsilon and P>0)
         #done = bool(np.abs(dP) <= epsilon and P>0)
-        done = bool(P >= 150)
+        done = bool(P <=0.)
         #print('dP/dV = ', dP/dV, 'P =', P)
         reward = self.reward_function1(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
         
@@ -154,15 +154,13 @@ class MpptEnv(gym.Env):
         pass
 
     def reward_function1(self, dP, P, done):
-        wp = 0.01
-        wn = 0.001
+        wp = 0.1
+        wn = 0.1
 
         if done: 
-            r = wp * P**2
-        elif P > 0:
-            r = wn * P**2
-        elif P <= 0:
-            r = -P**2
+            r = - 1000
+        else:
+            r = (wn*P)**2
         
 
         return r
