@@ -174,7 +174,7 @@ class MpptEnv(gym.Env):
         if done: #(dP/dV >= 0) and (dP/dV < epsilon):
             r = wp * P**2
         elif dP > 0 and P>0:
-            r = wp * dP
+            r = wp * P
         elif dP<0 and P>0:
             r = wn * dP
         elif P <= 0:
