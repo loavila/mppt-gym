@@ -169,7 +169,7 @@ class MpptEnv1(gym.Env):
 
         if done or dP<0: 
             r = - 1000
-        elif dP>0:
+        elif dP>=0 and P>0:
             r = (wp*P)**2
  
         return r
