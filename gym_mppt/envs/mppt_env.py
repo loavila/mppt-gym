@@ -40,6 +40,8 @@ class MpptEnv(gym.Env):
 
         self.Temp = 25.
         self.Irr = 1000.
+        self.steps = 0
+        self.MaxSteps = 100
         
 
         
@@ -48,6 +50,8 @@ class MpptEnv(gym.Env):
         return [seed]
 
     def step(self, action):
+
+        self.steps += 1
 
         # leer valor instantaneo de una serie de tiempo
         G = self.Irr #read irradiance # Solar radiation in mW / sq.cm
@@ -71,7 +75,9 @@ class MpptEnv(gym.Env):
         pv = Panel()
         #self.state = pv.calc_pv(G,T,V)
         I_new, V_new, P_new = pv.calc_pv(G,T,V)  #new_state = [I,V,P]
-        #print('De pv-calc_pv tengo:','I_new =', I_new, 'V_new = ', V_new, 'P_new =', P_new)
+        print('De pv-calc_pv tengo:','I_new =', I_new, 'V_new = ', V_new, 'P_new =', P_new)
+        #I_new = np.max(I_new, 0.)
+        #P_new = np.max(P_new, 0.)
 
 
     
@@ -90,7 +96,7 @@ class MpptEnv(gym.Env):
         dP = P_new - self.state[1] # pv_power(i) - pv_power(i-1)
         P = P_new
 
-        #print('dv =', dV, 'dP = ', dP, 'P =', P)
+        print('dv =', dV, 'dP = ', dP, 'P =', P)
 
                
 
@@ -115,9 +121,9 @@ class MpptEnv(gym.Env):
         #done = bool(0<= dP/dV <= epsilon)
         #done = bool(np.abs(dP/dV) <= epsilon and P>0)
         #done = bool(np.abs(dP) <= epsilon and P>0)
-        done = bool(P <=0.)
+        done = bool(P <=0. or self.steps>=self.MaxSteps)
         #print('dP/dV = ', dP/dV, 'P =', P)
-        reward = self.reward_function1(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
+        reward = self.reward_function3(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
         
         #The next state is:
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
@@ -128,7 +134,9 @@ class MpptEnv(gym.Env):
 
         #info = np.array([I_new,T,G,action])
 
-        info = {'I_new': I_new, 'T':T, 'G':G,'action':action}
+        #info = {'I_new': I_new, 'T':T, 'G':G,'action':action}
+        info = {'Corriente': I_new, 'Temperatura':T, 'Irradiancia':G,'Accion':action}
+
 
         return self.state, reward, done, info
 
@@ -137,6 +145,8 @@ class MpptEnv(gym.Env):
         state_dim = np.size(self.state)
         
         self.state = np.zeros(state_dim)
+
+        self.steps = 0
 
         #print('state reseteado =',self.state)
         
@@ -160,7 +170,7 @@ class MpptEnv(gym.Env):
         if done: 
             r = - 1000
         else:
-            r = P*2/100#(wp*P)**2
+            r = (P/100)**2#(wp*P)**2
  
         return r
 
@@ -182,8 +192,12 @@ class MpptEnv(gym.Env):
     def reward_function3(self, dP, P, done):
         #por ej usamos una gaussiana o lo q sea....
 
-        r = 0
+        if P<=0:
+            r = -100
+        else:
+            r = (P/100.)**2 - 1.
 
+      
         return r
 
 
