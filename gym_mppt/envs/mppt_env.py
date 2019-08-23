@@ -190,12 +190,11 @@ class MpptEnv(gym.Env):
         return r
 
     def reward_function3(self, dP, P, done):
-        #por ej usamos una gaussiana o lo q sea....
 
         if P<=0:
             r = -100
         else:
-            r = (P/100.)**2 - 1.
+            r = (P/100.)**2 - 10.
 
       
         return r

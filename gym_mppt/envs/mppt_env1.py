@@ -40,6 +40,9 @@ class MpptEnv1(gym.Env):
 
         self.Temp = 25.
         self.Irr = 1000.
+
+        self.steps = 0
+        self.MaxSteps = 100
         
 
         
@@ -48,6 +51,8 @@ class MpptEnv1(gym.Env):
         return [seed]
 
     def step(self, action):
+
+        self.steps += 1
 
         # leer valor instantaneo de una serie de tiempo
         G = self.Irr #read irradiance # Solar radiation in mW / sq.cm
@@ -114,9 +119,9 @@ class MpptEnv1(gym.Env):
         epsilon = self.epsilon
         #done = bool(0<= dP/dV <= epsilon)
         #done = bool(np.abs(dP/dV) <= epsilon and P>0)
-        done = bool(np.abs(dP) <= epsilon and P>0)
+        done = bool(P <=0. or self.steps>=self.MaxSteps)
         #print('dP/dV = ', dP/dV, 'P =', P)
-        reward = self.reward_function2(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
+        reward = self.reward_function3(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
         
         #The next state is:
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
@@ -137,6 +142,8 @@ class MpptEnv1(gym.Env):
         state_dim = np.size(self.state)
         
         self.state = np.zeros(state_dim)
+
+        self.steps += 0
         
         #irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
         #temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
@@ -190,10 +197,13 @@ class MpptEnv1(gym.Env):
         return r
 
     def reward_function3(self, dP, P, done):
-        #por ej usamos una gaussiana o lo q sea....
 
-        r = 0
+        if P<=0:
+            r = -100
+        else:
+            r = (P/100.)**2 - 1.
 
+      
         return r
 
 
