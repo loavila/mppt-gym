@@ -41,7 +41,7 @@ class MpptEnv(gym.Env):
         self.Temp = 25.
         self.Irr = 1000.
         self.steps = 0
-        self.MaxSteps = 100
+        self.MaxSteps = 50
         
 
         
@@ -121,7 +121,7 @@ class MpptEnv(gym.Env):
         #done = bool(0<= dP/dV <= epsilon)
         #done = bool(np.abs(dP/dV) <= epsilon and P>0)
         #done = bool(np.abs(dP) <= epsilon and P>0)
-        done = bool(P <=0. or self.steps>=self.MaxSteps)
+        done = bool(self.steps>=self.MaxSteps)
         #print('dP/dV = ', dP/dV, 'P =', P)
         reward = self.reward_function3(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
         
@@ -192,9 +192,9 @@ class MpptEnv(gym.Env):
     def reward_function3(self, dP, P, done):
 
         if P<=0:
-            r = -100
+            r = -10
         else:
-            r = (P/100.)**2 - 10.
+            r = (P/100.)**2 - 1.
 
       
         return r
