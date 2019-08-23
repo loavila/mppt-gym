@@ -18,8 +18,8 @@ class MpptEnv(gym.Env):
         self.reward_range = (-float('inf'), float('inf'))
         # spec = None
 
-        self.min_actionValue = -5.0
-        self.max_actionValue = 5.0
+        self.min_actionValue = -15.0
+        self.max_actionValue = 15.0
 
         self.max_stateValue = 1000.
         self.min_stateValue = -5000.
@@ -140,10 +140,10 @@ class MpptEnv(gym.Env):
 
         #print('state reseteado =',self.state)
         
-        #irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
-        #temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
-        #self.Temp = random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
-        #self.Irr = random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
+        irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
+        temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
+        self.Temp = random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
+        self.Irr = random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
         return self.state
 
  
@@ -157,10 +157,10 @@ class MpptEnv(gym.Env):
         wp = 0.1
         wn = 0.1
 
-        if done or dP<0: 
+        if done: 
             r = - 1000
-        elif dP>=0 and P>0:
-            r = (wp*P)**2
+        else:
+            r = P*2/100#(wp*P)**2
  
         return r
 
