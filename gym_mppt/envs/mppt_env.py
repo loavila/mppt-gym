@@ -75,7 +75,7 @@ class MpptEnv(gym.Env):
         pv = Panel()
         #self.state = pv.calc_pv(G,T,V)
         I_new, V_new, P_new = pv.calc_pv(G,T,V)  #new_state = [I,V,P]
-        print('De pv-calc_pv tengo:','I_new =', I_new, 'V_new = ', V_new, 'P_new =', P_new)
+        #print('De pv-calc_pv tengo:','I_new =', I_new, 'V_new = ', V_new, 'P_new =', P_new)
         #I_new = np.max(I_new, 0.)
         #P_new = np.max(P_new, 0.)
 
@@ -96,7 +96,7 @@ class MpptEnv(gym.Env):
         dP = P_new - self.state[1] # pv_power(i) - pv_power(i-1)
         P = P_new
 
-        print('dv =', dV, 'dP = ', dP, 'P =', P)
+        #print('dv =', dV, 'dP = ', dP, 'P =', P)
 
                
 
