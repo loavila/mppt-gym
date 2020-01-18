@@ -20,7 +20,7 @@ class Panel(object):
         self.Np = 4
         self.Ns = 60
 
-    def calc_pv(self, G, T, vx):
+    def calc_pv(self, G, T, vx, SH):
         # cell temperature
         Tcell = T + self.TK
         # cell reference temperature in kelvin
@@ -32,9 +32,9 @@ class Panel(object):
         # cell reverse saturation current
         Irs = self.Irr * ((Tcell / Tr) ** 3) * np.exp(self.q * Eg / (self.k * self.A) * ((1 / Tr) - (1 / Tcell)))
         # panel output current
-        I = self.Np * Iph - self.Np * Irs * (np.exp(self.q / (self.k * Tcell * self.A) * vx / self.Ns) - 1)
+        I = self.Np * Iph - self.Np * Irs * (np.exp(self.q / (self.k * Tcell * self.A) * vx * (1/SH) / self.Ns) - 1)
         # panel output voltage
-        V = vx # este es el Vg? 
+        V = vx # este es el Vg?
         # panel power
         P = vx * I
 
