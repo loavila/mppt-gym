@@ -123,7 +123,14 @@ if __name__ == '__main__':
 	#Testing the model:
 	env1 = gym.make('mppt_shaded-v0')
 	#env1 = DummyVecEnv([lambda: env1])  # The algorithms require a vectorized environment to run
-	obs = env1.reset()
+
+	init_state = env1.reset()
+
+
+	Temp_0 = 25. # 25 # 25 # 27.5 # 27.5 # 29.0 # 29.0 #23. #23. # 23. 
+	Irr_0 = 1000. # 1000 # 500 #1000 # 500 # 900. # 600. #800. #400 # 100.
+
+	obs = env1.setTempIrr(init_state,Temp_0,Irr_0)
 
 	'''
 	try:
@@ -135,30 +142,47 @@ if __name__ == '__main__':
 	  print("Something went wrong when load the last state")
 	  obs = env1.reset()
 	'''
-	
-	Temp_0 = 25
-	Irr_0 = 1000
 	print('init_state =', obs, 'forma:',obs.shape, 'tipo', type(obs))
 	datos = DATOS(obs, Temp_0, Irr_0) #tomo obs[0] dado que el estado está "empaquetado" y es una matriz de 1x3, entonces me quedo con un vector pa no cambiar grafos.
 	
 	action = 0 #delta V
+	P=[]
+	#V = []
+	#I = []
 
 	#np.save('cant_pruebas.npy',args.test_number)
-	for i in range(200):
+	for i in range(21000):
+		print ('i:',i, 'action:', action)
 
-		
+
 		#print('accion shape= ', action.shape, type(action))
-		next_state, rewards, dones, info = env1.step(action) #info = [{'Corriente': I_new, 'Temperatura':T, 'Irradiancia':G,'Accion':action}] es una lista con un dict adentro!! (que quilombo!!!)
+		next_state, rewards, dones, info = env1.step(action) 
+		#info = [{'Corriente': I_new, 'Temperatura':T, 'Irradiancia':G,'Accion':action}] es una lista con un dict adentro!! (que quilombo!!!)
+		#print('******HASTA ACAAA OK!******')
+		#exit()
+
 		informacion = info #me quedo con el dict de info
 		print('next_state:',next_state,next_state.shape)
+		
 		datos.add(next_state[0], next_state[1], next_state[2], informacion['Corriente'], informacion['Temperatura'], informacion['Irradiancia'], informacion['Accion'])
-		action +=0.25 
+		action =0.01
+		P.append(next_state[1])
+		#V.append(next_state[0])
+		#I.append(informacion['Corriente'])
+
+
+		
+
 
 		
 		print('vamos bien, por la i=',i,'la corriente es:',informacion['Corriente'],'Tension:',next_state[0])
 		#np.save('last_state.npy',obs)
 		# y si quisiera levantar tal variable x, hacemos:
 		#variable_levantada = np.load('x.npy')
+
+	P_max = np.max(P)
+
+	print('Pmax* = ', P_max)
 
 	datos.plotear()
 
