@@ -17,3 +17,9 @@ register(
     entry_point='gym_mppt.envs:MpptEnv2',
     #kwargs={"type_panel": 1}
 )
+
+register(
+   id='mppt_shaded-v0',
+   entry_point='gym_mppt.envs:MpptEnvShaded_0',
+   #kwargs={"type_panel": 1}
+)
