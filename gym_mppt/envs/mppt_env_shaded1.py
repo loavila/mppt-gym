@@ -56,7 +56,7 @@ from gym.utils import seeding
 #from gym_mppt.envs.dc_control import DCcontrol
 import random
 
-class MpptEnvShaded_0(gym.Env):
+class MpptEnvShaded_1(gym.Env):
     metadata = {
         'render.modes': ['human']
         # normal = AI plays, renders at 35 fps (i.e. would be used to watch AI play)
@@ -215,14 +215,14 @@ class MpptEnvShaded_0(gym.Env):
 
         self.steps += 0
         
-        a = random.sample([1,2,3,4,5,6,7,8,9,10],1)[0]
-        b = random.sample([1,2,3,4,5,6,7,8,9,10],1)[0]
-        c = random.sample([1,2,3,4,5,6,7,8,9,10],1)[0]
+        #a = random.sample([1,2,3,4,5,6,7,8,9,10],1)[0]
+        #b = random.sample([1,2,3,4,5,6,7,8,9,10],1)[0]
+        #c = random.sample([1,2,3,4,5,6,7,8,9,10],1)[0]
         #irradiancias = list([100., 200., 300., 400., 500., 600., 700., 800., 900., 1000])
         #temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
         #self.Temp = 25#random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
         #self.Irr = 100#random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
-        self.SH = [a, 10, b, 10, c, 10]
+        #self.SH = [a, 10, b, 10, c, 10]
         return self.state
 
     
