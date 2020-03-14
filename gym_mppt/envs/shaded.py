@@ -1,4 +1,5 @@
-from pvmodel_shaded import Panel
+#from pvmodel_shaded import Panel
+from gym_mppt.envs.pvmodel_shaded import Panel 
 
 class Shaded(object):
     def __init__(self):
