@@ -121,7 +121,7 @@ if __name__ == '__main__':
 	'''
 
 	#Testing the model:
-	env1 = gym.make('mppt_shaded-v0')
+	env1 = gym.make('mppt_shaded-v1')
 	#env1 = DummyVecEnv([lambda: env1])  # The algorithms require a vectorized environment to run
 
 	init_state = env1.reset()
