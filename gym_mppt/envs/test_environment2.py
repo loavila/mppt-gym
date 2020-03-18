@@ -129,8 +129,9 @@ if __name__ == '__main__':
 
 	Temp_0 = 25. # 25 # 25 # 27.5 # 27.5 # 29.0 # 29.0 #23. #23. # 23. 
 	Irr_0 = 1000. # 1000 # 500 #1000 # 500 # 900. # 600. #800. #400 # 100.
+	SH_0 = list([4, 10, 7, 10, 10, 10])
 
-	obs = env1.setTempIrr(init_state,Temp_0,Irr_0)
+	obs = env1.setTempIrr(init_state,Temp_0,Irr_0,SH_0)
 
 	'''
 	try:

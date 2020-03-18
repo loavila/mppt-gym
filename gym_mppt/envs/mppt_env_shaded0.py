@@ -228,7 +228,7 @@ class MpptEnvShaded_0(gym.Env):
         return self.state
 
     
-    def setTempIrr(self,last_state,T,G):
+    def setTempIrr(self,last_state,T,G,SH):
         """
         Esta funcion es para usar unicamente en la simulación, para cuando le cambiamos la Temp y la Irr
         """
@@ -236,6 +236,7 @@ class MpptEnvShaded_0(gym.Env):
         
         self.Temp = T
         self.Irr = G
+        self.SH = SH
         
         return self.state
     
@@ -275,10 +276,10 @@ class MpptEnvShaded_0(gym.Env):
     def reward_function3(self, dP, P, done):
 
         if P<=0:
-            r = -10
+            r = -1
         else:
             #r = (P/10000.)**2 - 1.*0
-            r = P/100.
+            r = P/10000.
 
       
         return r

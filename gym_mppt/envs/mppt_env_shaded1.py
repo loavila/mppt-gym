@@ -213,7 +213,7 @@ class MpptEnvShaded_1(gym.Env):
         
         self.state = np.zeros(state_dim)
 
-        self.steps += 0
+        self.steps = 0
         
         #a = random.sample([1,2,3,4,5,6,7,8,9,10],1)[0]
         #b = random.sample([1,2,3,4,5,6,7,8,9,10],1)[0]
@@ -226,7 +226,7 @@ class MpptEnvShaded_1(gym.Env):
         return self.state
 
     
-    def setTempIrr(self,last_state,T,G):
+    def setTempIrr(self,last_state,T,G,SH):
         """
         Esta funcion es para usar unicamente en la simulación, para cuando le cambiamos la Temp y la Irr
         """
@@ -234,6 +234,7 @@ class MpptEnvShaded_1(gym.Env):
         
         self.Temp = T
         self.Irr = G
+        self.SH = SH
         
         return self.state
     
