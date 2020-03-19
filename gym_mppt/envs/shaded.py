@@ -37,8 +37,7 @@ class Shaded(object):
             else:
                 Ipv.append(ISH[jj])
 
-        print('Ipv =', Ipv)
-
+        
         IT = Ipv[0] * self.Ng[0] + Ipv[1] * self.Ng[1] + Ipv[2] * self.Ng[2]
         VT = V
         PT = IT*VT
