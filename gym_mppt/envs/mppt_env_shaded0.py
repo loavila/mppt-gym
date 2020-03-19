@@ -223,8 +223,8 @@ class MpptEnvShaded_0(gym.Env):
         #temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
         #self.Temp = 25#random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
         #self.Irr = 100#random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
-        #self.SH = [a, 10, b, 10, c, 10]
-        self.SH = [4, 10, 7, 10, 10, 10] #vamos a hacer un entrenamiento simple...luego saco esta linea
+        self.SH = [a, 10, b, 10, c, 10]
+        #self.SH = [4, 10, 7, 10, 10, 10] #vamos a hacer un entrenamiento simple...luego saco esta linea
         return self.state
 
     
