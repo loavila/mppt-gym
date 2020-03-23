@@ -71,10 +71,10 @@ class MpptEnvShaded_0(gym.Env):
         self.min_actionValue = -15.0
         self.max_actionValue = 15.0
 
-        self.max_stateValue = 30000.
+        self.max_stateValue = 55000.
         self.min_stateValue = -100.
 
-        self.state_dim = 2
+        self.state_dim = 3
         self.action_dim = 1
 
         self.action_space = spaces.Box(low=self.min_actionValue, high=self.max_actionValue,
@@ -97,7 +97,7 @@ class MpptEnvShaded_0(gym.Env):
         #LUIS:
         #self.G = [100, 1000]  # read irradiance # Solar radiation in mW / sq.cm
         #self.T = 25  # read temperature # ojo con kelvin 273
-        self.SH = [4, 10, 7, 10, 10, 10]  # Shaded modules
+        self.SH = [10, 10, 10, 10, 10, 10]  # Shaded modules
         #self.Mp = 10  # Modules in parallel
         #self.Ng = [40, 38, 22]  # Parallel-connected series assemblies
         #self.Iscr_sh = 0.375
@@ -141,7 +141,7 @@ class MpptEnvShaded_0(gym.Env):
         #pv = Panel()
         #self.state = pv.calc_pv(G,T,V)
         #I_new, V_new, P_new = pv.calc_pv(G,T,V)  #new_state = [I,V,P]
-        #print('De pv-calc_pv tengo:','I_new =', I_new, 'V_new = ', V_new, 'P_new =', P_new)
+        #print('Desteps pv-calc_pv tengo:','I_new =', I_new, 'V_new = ', V_new, 'P_new =', P_new)
 
         #Luis:
         pv = Shaded()
@@ -189,21 +189,21 @@ class MpptEnvShaded_0(gym.Env):
         epsilon = self.epsilon
         #done = bool(0<= dP/dV <= epsilon)
         #done = bool(np.abs(dP/dV) <= epsilon and P>0)
-        done = bool(P<-0.001 or self.steps>=self.MaxSteps)
+        done = bool(P<=-0.001 or self.steps>=self.MaxSteps)
         #print('dP/dV = ', dP/dV, 'P =', P)
         reward = self.reward_function3(dP, P,done) #Poniendo aca una funcion, despues es mas facil para jugar..porque cambiamos el nombre de la funcion y listo...y vamos agregando abajo, tantas como se nos cante...
         
         #The next state is:
         #self.state = np.array([[V_new,P_new,I_new]]) #por ahora dejamos I en el estado, pero la podriamos sacar...eventualmete la vamos guardando en una matriz variable del self, por ej: self.currents y chau (esto es por si necesitamos por algo...)
         #self.state = np.reshape(np.hstack([V_new,P_new,dV]), (self.state_dim,))
-        self.state = np.reshape(np.hstack([V_new,P_new]), (self.state_dim,)) 
+        self.state = np.reshape(np.hstack([V_new,P_new,dP]), (self.state_dim,)) 
         #print('self.state=',self.state,self.state.shape, 'done', done)
         #print('EL ESTADO ES', self.state, self.state.shape)
         #print('V_new', type(V_new),V_new.shape,'P_new',type(P_new),P_new,'dV',type(dV),dV)
 
         #info = np.array([I_new,T,G,action])
 
-        info = {'Corriente': I_new, 'Temperatura':T, 'Irradiancia':G,'Accion':action}
+        info = {'Corriente': I_new, 'Temperatura':T, 'Irradiancia':G,'Accion':action, 'Steps':self.steps,'v0':v0,'P':P}
 
         return self.state, reward, done, info
 
@@ -223,8 +223,8 @@ class MpptEnvShaded_0(gym.Env):
         #temperaturas = list([13.5, 15., 17.5, 20., 22.5, 25., 27.5, 30., 32.5, 35])
         #self.Temp = 25#random.sample(temperaturas,1)[0] #(Elegir un random de estos) o dejar fija la T y solo variar la irr pa empezar a probar...
         #self.Irr = 100#random.sample(irradiancias, 1)[0] #random.sample(irradiancias,1) # [0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0] (Elegir un random de estos)
-        #self.SH = [a, 10, b, 10, c, 10]
-        self.SH = [4, 10, 7, 10, 10, 10] #vamos a hacer un entrenamiento simple...luego saco esta linea
+        self.SH = [a, 10, b, 10, c, 10]
+        #self.SH = [4, 10, 7, 10, 10, 10] #vamos a hacer un entrenamiento simple...luego saco esta linea
         return self.state
 
     
@@ -238,7 +238,7 @@ class MpptEnvShaded_0(gym.Env):
         self.Irr = G
         self.SH = SH
         
-        return self.state
+        return last_state
     
 
     def render(self, mode='human', close=False):
@@ -279,7 +279,7 @@ class MpptEnvShaded_0(gym.Env):
             r = -1
         else:
             #r = (P/10000.)**2 - 1.*0
-            r = P/10000.
+            r = P/50000.
 
       
         return r
