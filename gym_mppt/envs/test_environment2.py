@@ -126,10 +126,18 @@ if __name__ == '__main__':
 
     init_state = env.reset()
 
-    irradiancias = list([1000., 1000., 1000.])
-    temperaturas = list([25., 25., 25.])
-    sh = list([[4, 10, 7, 10, 10, 10],[2, 10, 10, 10, 7, 10],[8, 10, 6, 10, 5, 10]]) #list([[10, 10, 10, 10, 10, 10],[10, 10, 10, 10, 10, 10],[10, 10, 10, 10, 10, 10]])
-
+    irradiancias = list([1000.])
+    temperaturas = list([25.])
+    #sh = list([[4, 10, 7, 10, 10, 10]]) #list([[10, 10, 10, 10, 10, 10],[10, 10, 10, 10, 10, 10],[10, 10, 10, 10, 10, 10]])
+    #sh = list([[2, 10, 10, 10, 7, 10]])
+    #sh = list([[8, 10, 6, 10, 5, 10]])
+    #sh = list([[10, 10, 10, 10, 10, 10]])
+    sh = list([[1, 10, 3, 10, 5, 10]])
+    #sh = list([[5, 10, 10, 10, 4, 10]])
+    #sh = list([[10, 10, 7, 10, 2, 10]])
+    #sh = list([[10, 10, 1, 10, 2, 10]])
+    #sh = list([[3, 10, 8, 10, 5, 10]])
+    #sh = list([[9, 10, 3, 10, 6, 10]])
 
     Temp_0 = temperaturas[0] # 25 # 25 # 27.5 # 27.5 # 29.0 # 29.0 #23. #23. # 23. 
     Irr_0 = irradiancias[0]# 1000 # 500 #1000 # 500 # 900. # 600. #800. #400 # 100.
@@ -147,7 +155,7 @@ if __name__ == '__main__':
       print("Something went wrong when load the last state")
       obs = env1.reset()
     '''
-    print('init_state =', obs, 'forma:',obs.shape, 'tipo', type(obs))
+    #print('init_state =', obs, 'forma:',obs.shape, 'tipo', type(obs))
     datos = DATOS(obs, Temp_0, Irr_0) #tomo obs[0] dado que el estado está "empaquetado" y es una matriz de 1x3, entonces me quedo con un vector pa no cambiar grafos.
     
     action = 0 #delta V
@@ -196,8 +204,10 @@ if __name__ == '__main__':
             #variable_levantada = np.load('x.npy')
 
         P_max = np.max(P)
+        P_max_index = np.argmax(P)
+        V_max = datos.V[P_max_index]
 
-        print('Pmax* = ', P_max)
+        print('Pmax* = ', P_max,'V_max* =', V_max)
 
     datos.plotear()
     

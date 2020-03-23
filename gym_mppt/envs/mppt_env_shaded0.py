@@ -147,7 +147,9 @@ class MpptEnvShaded_0(gym.Env):
         pv = Shaded()
         #I_new, V_new, P_new = pv.data(G, T, V, self.SH, self.Ng, self.Iscr_sh)
         I_new, V_new, P_new = pv.data(G, T, V,self.SH)
-
+        #print ('Temperatura = ', T)
+        #print ('Irradiancia = ', G)
+        #print ('SH  = ', self.SH)
 
     
 
