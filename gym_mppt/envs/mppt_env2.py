@@ -56,7 +56,7 @@ class MpptEnv2(gym.Env):
 
         # leer valor instantaneo de una serie de tiempo
         G = self.Irr #read irradiance # Solar radiation in mW / sq.cm
-        T = self.Temp #read temperature (ºC) # ojo con kelvin 273
+        T = self.Temp #read temperature (C) # ojo con kelvin 273
 
         # aca supongo que solo vamos a tener disponibles los ultimos dos valores
         '''
@@ -107,7 +107,7 @@ class MpptEnv2(gym.Env):
         # asi esta en el car-on-a-hill continuo
         # done = true termina el episodio
 
-        ''' Ojo luis, porque con el done asi, el dP/Dv puede ser negativo y da que termina el episodio. Solo comenté esto. Lo hago abajo para que quede mas facil...
+        ''' Ojo luis, porque con el done asi, el dP/Dv puede ser negativo y da que termina el episodio. Solo comente esto. Lo hago abajo para que quede mas facil...
         done = bool(dP/dV <= epsilon)
         if done: #(dP/dV >= 0) and (dP/dV < epsilon):
             reward = wp * dP
@@ -154,7 +154,7 @@ class MpptEnv2(gym.Env):
     
     def setTempIrr(self,last_state,T,G):
         """
-        Esta funcion es para usar unicamente en la simulación, para cuando le cambiamos la Temp y la Irr
+        Esta funcion es para usar unicamente en la simulacion, para cuando le cambiamos la Temp y la Irr
         """
         #self.state = last_state
         
